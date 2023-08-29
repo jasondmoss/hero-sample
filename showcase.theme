@@ -1,0 +1,61 @@
+<?php
+
+/**
+ * @file
+ * Theme Functions.
+ *
+ * @package DRUPAL10
+ * @subpackage SHOWCASE
+ * @author Jason Moss <jason@jdmlabs.com>
+ */
+
+use Drupal\node\NodeInterface;
+
+/**
+ * Prepares variables for `page` template.
+ *
+ * @param array $variables Array of existing variable values.
+ * @method deft_preprocess_page
+ */
+function showcase_preprocess_page(array &$variables): void
+{
+    $variables['hasHero'] = $variables['heroIsMultiple'] = false;
+
+    // By node.
+    if (isset($variables['node']) && $variables['node'] instanceof NodeInterface) {
+        $entity = $variables['node'];
+
+        $variables['hero_slides'] = [];
+
+        // Has a hero (image/video/slider).
+        if ($entity->hasField('field_hero')
+            && ! $entity->get('field_hero')->isEmpty()
+        ) {
+            $variables['hasHero'] = true;
+            $variables['hero_slides'] = $entity->get('field_hero');
+
+            if (count($variables['hero_slides']) > 1) {
+                // Is slider.
+                $variables['heroIsMultiple'] = true;
+            }
+        }
+    }
+
+    // By taxonomy term.
+    if (Drupal::routeMatch()->getRouteName() === 'entity.taxonomy_term.canonical') {
+        $term = Drupal::routeMatch()->getParameter('taxonomy_term');
+
+        // Has a hero (image/video/slider).
+        if ($term->hasField('field_hero')
+            && ! $term->get('field_hero')->isEmpty()
+        ) {
+            $variables['hasHero'] = true;
+            $variables['isTerm'] = true;
+            $variables['hero_slides'] = $term->get('field_hero');
+
+            if (count($variables['hero_slides']) > 1) {
+                $variables['heroIsMultiple'] = true;
+            }
+        }
+    }
+}

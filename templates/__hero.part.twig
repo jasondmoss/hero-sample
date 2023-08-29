@@ -1,0 +1,62 @@
+{% for key, item in node.field_masthead -%}
+  {% set isImage = false %}
+  {% set isVideo = false %}
+  {% set bundle = item.entity.field_media.entity.bundle.getString() %}
+
+  {% if bundle == 'image' -%}
+    {% set isImage = true %}
+    {% set class = ' has-image' %}
+    {% set itemprop = 'image' %}
+    {% set itemtype = 'ImageObject' %}
+  {% elseif bundle == 'remote_video' -%}
+    {% set isVideo = true %}
+    {% set class = ' has-video' %}
+    {% set itemprop = 'video' %}
+    {% set itemtype = 'VideoObject' %}
+    {% set videoUrl = item.entity.field_media.entity.field_media_oembed_video.0.value %}
+    {% set videoId = videoUrl|split('=')|last %}
+  {% endif -%}
+
+  <figure itemprop="{{ itemprop }}" itemscope itemtype="https://schema.org/{{ itemtype }}" role="group" class="hero-item{{ class }}" aria-labelledby="heroContent_{{ item.entity.id() }}">
+    <meta itemprop="representativeOfPage" content="true">
+
+    {% if isImage -%}
+      {#
+        Hero Image.
+      #}
+      <div class="media-object">
+        {{ drupal_image(item.entity.field_media.entity.field_media_image.entity.fileuri, 'hero', responsive=true) }}
+      </div>
+    {% elseif isVideo -%}
+      {#
+        Hero YouTube Video.
+      #}
+      <div class="video-responsive">
+        <video class="video-embed" data-yt2html5="{{ videoUrl }}" autoplay muted loop>
+          <p>Sorry, your browser doesn't support embedded videos.<br>Please visit <a rel="external" href="https://www.youtube.com/watch?v={{ videoUrl }}">YouTube</a> to see the video.
+        </video>
+        {% if view.style_plugin.getField(key, 'edit_node') -%}
+          <a rel="nofollow" role="button" class="edit-node" href="{{ view.style_plugin.getField(key, 'edit_node')|striptags|trim }}">edit slide</a>
+        {% endif -%}
+      </div>
+    {% endif -%}
+
+    {% if isImage and ((item.entity.field_title|length or item.entity.field_tagline|length or item.entity.field_link|length) > 0) -%}
+      {#
+        Hero Overlay (For images only).
+      #}
+      <figcaption itemprop="caption" class="pane">
+      {% if item.entity.field_title is not empty -%}
+        <h2 id="heroContent_{{ item.entity.id() }}" class="hero-title"><span itemprop="name">{{ item.entity.field_title.value }}</span></h2>
+      {% endif -%}
+      {% if item.entity.field_tagline is not empty -%}
+        <p itemprop="text" class="hero-tagline">{{ item.entity.field_tagline.value }}</p>
+      {% endif -%}
+      {% if item.entity.field_link is not empty -%}
+        <a itemprop="url" rel="bookmark" role="button" class="u-url hero-button" href="{{ item.entity.field_link.get(0).getUrl().toString() }}">{{ item.entity.field_link.title }}</a>
+      {% endif -%}
+      </figcaption>
+    {% endif -%}
+
+  </figure>
+{% endfor -%}

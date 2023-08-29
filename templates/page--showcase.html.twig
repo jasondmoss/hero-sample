@@ -1,0 +1,9 @@
+{% set ariaLabelId = 'entry-' ~ node.id ~ '-label' %}
+...
+<main itemprop="mainEntityOfPage" id="entry-{{ node.id }}"{{ attributes.addClass(classes) }} aria-labelledby="{{ ariaLabelId }}">
+  {# Pull in the page header #}
+  {% include '@showcase/__masthead.part.twig' %}
+  ...
+</main>
+...
+<script src="scripts.js"></script>

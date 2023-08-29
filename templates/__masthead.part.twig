@@ -1,0 +1,11 @@
+<header itemprop="headline" class="page--masthead">
+  {% if hasHero -%}
+    <div class="carousel{{ heroIsMultiple ? ' multiple' }} hero">
+      {% include '@showcase/__hero.part.twig' %}
+    </div>
+  {% else -%}
+    <h1 itemprop="headline" id="{{ ariaLabelId }}" class="hero-title">
+      <span itemprop="name">{{ node.title.value }}</span>
+    </h1>
+  {% endif -%}
+</header>
