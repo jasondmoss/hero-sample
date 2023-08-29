@@ -4,4 +4,4 @@ I worked on a project earlier in the year, where the client wanted a 'hero carou
 
 This solution was implemented within the custom theme of the site in question, but would be trivial to export to a dedicated module for reuse...
 
-**Note:** _This is example is very unlikely to be actually be functional in it's current state._
+**Note:** _This is example is not actually functional in this, it's current state._
