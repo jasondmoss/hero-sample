@@ -4,4 +4,4 @@ I worked on a project earlier in the year, where the client wanted a hero carous
 
 Needless to say, this took a bit work. Here is a sample of the code I used to get this working as the client requested.
 
-**Note:** _This is example is very unlikely to be functional._
+**Note:** _This is example is very unlikely to be actually be functional in it's current state._
